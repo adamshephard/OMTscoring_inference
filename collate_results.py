@@ -73,99 +73,76 @@ label_dict ={
 }
 
 outcome = 'transformation' #'recurrence' #'transformation'
-features = 'raw_images_30eps' #'morph_features_104_64ftrs_100eps' #'raw_images' #'deep_features' #'morph_features_156ftrs'
-method = 'resnet34_SA2' #'mlp' #'resnet34_SA' #'mlp' #'resnet34' #'fc'
-input_dir = f'/data/ANTICIPATE/outcome_prediction/MIL/idars/output/cohort_1,3,4/{outcome}/{method}/{features}/oed/'
+features = 'raw_images' #'morph_features_104_64ftrs' #'raw_images' #'deep_features' #'morph_features_156ftrs'
+method = 'resnet34_SA' #'mlp' #'resnet34' #'fc'
+input_dir = f'/data/ANTICIPATE/outcome_prediction/MIL/idars/output/train-sheffield_test-belfast,birmingham,brazil/{outcome}/{method}/{features}/oed/'
 
-nr_repeats = 3
-nr_folds = 5
-count = 0
 
-f1_data = pd.DataFrame(columns=[
-    'repeat', 'fold', 'mj vote', 'mj vote raw', 'avg prob',
-    'max prob', 'sump', 'top5', 'med', 'gmp', 'avgtop'
-    ])
-auc_data = pd.DataFrame(columns=[
-    'repeat', 'fold', 'mj vote', 'mj vote raw', 'avg prob',
-    'max prob', 'sump', 'top5', 'med', 'gmp', 'avgtop'
-    ])  
-cutoff_data = pd.DataFrame(columns=[
-    'repeat', 'fold', 'mj vote', 'mj vote raw', 'avg prob',
-    'max prob', 'sump', 'top5', 'med', 'gmp', 'avgtop'
-    ])     
-for repeat in range(1, nr_repeats+1):
-    for fold in range(nr_folds):
-        # try:
-        data_file = os.path.join(input_dir, f'repeat_{repeat}/best{fold}/prob_test_slides.csv')
-        # fold_data = pd.read_csv(data_file)
-        # if count == 0:
-        #     data = fold_data
-        # else:
-        #     data = data.append(fold_data)
-        #     data = data.reset_index(drop=True)
-        # count += 1
-        fold_data = pd.read_csv(data_file)
-        data = fold_data
-        test_slide_avg = data['Avg Probability'].tolist()
-        test_slide_max = data['Max Probability'].tolist()
-        test_slide_sum = data['Sum Probability'].tolist()
-        test_slide_md = data['Med Probability'].tolist()
-        test_slide_gm = data['GM Probability'].tolist()
-        test_slide_avgtop = data['AvgTop Probability'].tolist()
-        test_slide_avgt5 = data['A10 Probability'].tolist()
-        test_slide_mjvt_raw = data['Raw Probability'].tolist()
-        test_slide_mjvt = data['MjVt Probability'].tolist()
-        targets = data['Targets'].tolist()
-        f1_mv, roc_auc_mjvt, cutoff_mjvt = calc_metrics(targets, test_slide_mjvt)
-        f1_mv_r, roc_auc_mjv_raw, cutoff_mjv_raw = calc_metrics(targets, test_slide_mjvt_raw)
-        f1_md, roc_auc_mdp, cutoff_mdp = calc_metrics(targets, test_slide_md)
-        f1_gp, roc_auc_gmp, cutoff_gmp = calc_metrics(targets, test_slide_gm)
-        f1_ap, roc_auc_avgp, cutoff_avgp = calc_metrics(targets, test_slide_avg)
-        f1_mp, roc_auc_maxp, cutoff_maxp = calc_metrics(targets, test_slide_max)
-        f1_sp, roc_auc_sump, cutoff_sump = calc_metrics(targets, test_slide_sum)
-        f1_5, roc_auc_top5, cutoff_top5 = calc_metrics(targets, test_slide_avgt5)
-        f1_at, roc_auc_avgtop, cutoff_avgtop = calc_metrics(targets, test_slide_avgtop)
-        f1_data = f1_data.append({
-            'repeat': int(repeat),
-            'fold': int(fold),
-            'mj vote': f1_mv,
-            'mj vote raw': f1_mv_r,
-            'avg prob': f1_ap,
-            'max prob': f1_mp,
-            'sump': f1_sp,
-            'top5': f1_5,
-            'med': f1_md,
-            'gmp': f1_gp,
-            'avgtop': f1_at
-            }, ignore_index=True)
-        auc_data = auc_data.append({
-            'repeat': int(repeat),
-            'fold': int(fold),
-            'mj vote': roc_auc_mjvt,
-            'mj vote raw': roc_auc_mjv_raw,
-            'avg prob': roc_auc_avgp,
-            'max prob': roc_auc_maxp,
-            'sump': roc_auc_sump,
-            'top5': roc_auc_top5,
-            'med': roc_auc_mdp,
-            'gmp': roc_auc_gmp,
-            'avgtop': roc_auc_avgtop
-            }, ignore_index=True)
-        cutoff_data = cutoff_data.append({
-            'repeat': int(repeat),
-            'fold': int(fold),
-            'mj vote': cutoff_mjvt,
-            'mj vote raw': cutoff_mjv_raw,
-            'avg prob': cutoff_avgp,
-            'max prob': cutoff_maxp,
-            'sump': cutoff_sump,
-            'top5': cutoff_top5,
-            'med': cutoff_mdp,
-            'gmp': cutoff_gmp,
-            'avgtop': cutoff_avgtop
-            }, ignore_index=True)
-        # except:
-        #     continue
+ 
+try:
+    data_file = os.path.join(input_dir, f'prob_test_slides.csv')
+    fold_data = pd.read_csv(data_file)
+    data = fold_data
+    test_slide_avg = data['Avg Probability'].tolist()
+    test_slide_max = data['Max Probability'].tolist()
+    test_slide_sum = data['Sum Probability'].tolist()
+    test_slide_md = data['Med Probability'].tolist()
+    test_slide_gm = data['GM Probability'].tolist()
+    test_slide_avgtop = data['AvgTop Probability'].tolist()
+    test_slide_avgt5 = data['A10 Probability'].tolist()
+    test_slide_mjvt_raw = data['Raw Probability'].tolist()
+    test_slide_mjvt = data['MjVt Probability'].tolist()
+    targets = data['Targets'].tolist()
+    f1_mv, roc_auc_mjvt, cutoff_mjvt = calc_metrics(targets, test_slide_mjvt)
+    f1_mv_r, roc_auc_mjv_raw, cutoff_mjv_raw = calc_metrics(targets, test_slide_mjvt_raw)
+    f1_md, roc_auc_mdp, cutoff_mdp = calc_metrics(targets, test_slide_md)
+    f1_gp, roc_auc_gmp, cutoff_gmp = calc_metrics(targets, test_slide_gm)
+    f1_ap, roc_auc_avgp, cutoff_avgp = calc_metrics(targets, test_slide_avg)
+    f1_mp, roc_auc_maxp, cutoff_maxp = calc_metrics(targets, test_slide_max)
+    f1_sp, roc_auc_sump, cutoff_sump = calc_metrics(targets, test_slide_sum)
+    f1_5, roc_auc_top5, cutoff_top5 = calc_metrics(targets, test_slide_avgt5)
+    f1_at, roc_auc_avgtop, cutoff_avgtop = calc_metrics(targets, test_slide_avgtop)
+    f1_data = f1_data.append({
+        'repeat': int(repeat),
+        'fold': int(fold),
+        'mj vote': f1_mv,
+        'mj vote raw': f1_mv_r,
+        'avg prob': f1_ap,
+        'max prob': f1_mp,
+        'sump': f1_sp,
+        'top5': f1_5,
+        'med': f1_md,
+        'gmp': f1_gp,
+        'avgtop': f1_at
+        }, ignore_index=True)
+    auc_data = auc_data.append({
+        'repeat': int(repeat),
+        'fold': int(fold),
+        'mj vote': roc_auc_mjvt,
+        'mj vote raw': roc_auc_mjv_raw,
+        'avg prob': roc_auc_avgp,
+        'max prob': roc_auc_maxp,
+        'sump': roc_auc_sump,
+        'top5': roc_auc_top5,
+        'med': roc_auc_mdp,
+        'gmp': roc_auc_gmp,
+        'avgtop': roc_auc_avgtop
+        }, ignore_index=True)
+    cutoff_data = cutoff_data.append({
+        'repeat': int(repeat),
+        'fold': int(fold),
+        'mj vote': cutoff_mjvt,
+        'mj vote raw': cutoff_mjv_raw,
+        'avg prob': cutoff_avgp,
+        'max prob': cutoff_maxp,
+        'sump': cutoff_sump,
+        'top5': cutoff_top5,
+        'med': cutoff_mdp,
+        'gmp': cutoff_gmp,
+        'avgtop': cutoff_avgtop
+        }, ignore_index=True)
+except:
+    continue
 
 f1_data['repeat'] = f1_data['repeat'].astype('int')
 f1_data['fold'] = f1_data['fold'].astype('int')
@@ -193,9 +170,12 @@ auc_data['fold']['std'] = "-"
 # print('F1')
 # print(f1_data)
 
-auc_data.to_csv(os.path.join(input_dir, 'auroc_summary.csv'))
-f1_data.to_csv(os.path.join(input_dir, 'f1_summary.csv'))
-cutoff_data.to_csv(os.path.join(input_dir, 'cutoff_summary.csv'))
+in_dir = os.path.join(input_dir, subcohort)
+os.makedirs(in_dir, exist_ok=True)
+
+auc_data.to_csv(os.path.join(in_dir, 'auroc_summary.csv'))
+f1_data.to_csv(os.path.join(in_dir, 'f1_summary.csv'))
+cutoff_data.to_csv(os.path.join(in_dir, 'cutoff_summary.csv'))
 
 
 vals = auc_data.drop(columns=['repeat', 'fold']).loc['mean'].values.tolist()
@@ -220,7 +200,10 @@ for repeat in range(1, nr_repeats+1):
         try:
             data_file = os.path.join(input_dir, f'repeat_{repeat}/best{fold}/prob_test_slides.csv')
             fold_data = pd.read_csv(data_file)
-            data = fold_data
+            if subcohort == 'all':
+                data = fold_data
+            else:
+                data = fold_data.loc[fold_data['SLIDE'].str.contains(subcohort)]
             pred = data[label_dict[top_label]].tolist()
             target = data['Targets'].tolist()
             # preds.append(pred)
@@ -244,9 +227,12 @@ for repeat in range(1, nr_repeats+1):
         except:
             continue
 
-fig, ax = auroc_curve(tprs, mean_fpr, aucs)
+all_tprs.append(tprs)
+all_fprs.append(mean_fpr)
+all_aucs.append(aucs)
+fig, ax = auroc_curve(tprs, mean_fpr, aucs, print_stds=False)
 # plt.show(block=False)
-output_path = os.path.join(input_dir, 'auroc_curves.png')
+output_path = os.path.join(in_dir, 'auroc_curves.png')
 plt.savefig(output_path)
 
 
@@ -259,4 +245,10 @@ summary_data['repeat']['mean'] = "-"
 summary_data['repeat']['std'] = "-"
 summary_data['fold']['mean'] = "-"
 summary_data['fold']['std'] = "-" 
-summary_data.to_csv(os.path.join(input_dir, f'metrics_summary_{top_label}.csv'))
+summary_data.to_csv(os.path.join(in_dir, f'metrics_summary_{top_label}.csv'))
+
+
+fig, ax = auroc_curve(all_tprs, all_fprs, all_aucs, len(cohort_names), cohort_names, print_stds=False)
+# plt.show(block=False)
+output_path = os.path.join(input_dir, 'auroc_curves_subcohorts.png')
+plt.savefig(output_path)
