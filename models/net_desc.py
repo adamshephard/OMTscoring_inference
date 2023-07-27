@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 from torch.autograd import Function
 
-from models.net_utils import Identitiy
+from models.net_utils import Identity
 
 class MLP(nn.Module):
     def __init__(self, d, hidden_d, nr_classes):

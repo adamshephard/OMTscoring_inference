@@ -2,11 +2,7 @@
 
 This repository provides the inference code for the models used for predicting slide-level malignancy transformation in OED. Link to preprint [here](https://arxiv.org/abs/2307.03757). <br />
 
-The first step in this pipeline is to use HoVer-Net+ ([see original paper](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAtoolbox (see [paper here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HooVer-Net in the below scripts.
-
-Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. This is currently being worked on.
-
-After this point, these scripts require the user to have already generated patch-level (nuclear) features for use within this model. However, we will add these scripts in the near future.
+The first step in this pipeline is to use HoVer-Net+ ([see original paper here](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAtoolbox (see [paper here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HoVer-Net in the below scripts. Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. After this, we perform the OMTsocring using our pre-trained MLP model.
 
 ## Set Up Environment
 
@@ -34,21 +30,57 @@ Below are the main executable scripts in the repository:
 
 ### Data Format
 Input: <br />
-- Standard images files, including `png`, `jpg` and `tiff`.
 - WSIs supported by [OpenSlide](https://openslide.org/), including `svs`, `tif`, `ndpi` and `mrxs`.
 
-Output: <br />
-- ...
-  
 ### Model Weights
 
 Model weights obtained from training ....
 
 If any of the above checkpoints are used, please ensure to cite the corresponding paper.
 
-### Usage and Options
+### Usage
+
+#### Segmentation with HoVer-Net+
+
+The first stage is to run HoVer-Net+ on the WSIs to generate epithelial and nuclei segmentations. This can be quite slow as run at 0.5mpp. Ensure to change the  `input_wsi_dir` and `output_dir` arguments within the file to ensure they are pointing towards the correct directories.
+
+Usage: <br />
+```
+  run_segmentation.py
+
+```
+
+#### Feature Generation
+
+The second stage is to tesselate the image into smaller patches and generate correpsonding patch-level morphological and spatial features using the nuclei/layer segmentations. Ensure to change the  `input_wsi_dir`, `hovernetplus_output_dir`, and `feature_output_dir` arguments within the file to ensure they are pointing towards the correct directories. Note the `hovernetplus_output_dir` is the output directory from the previous step.
+
+Usage: <br />
+```
+  get_features.py
+```
+
+We then need to adjust the patch output to be in the right format (one file per tile). We can this using the following script. Make sure to change the following arguments: `input_folder` and `output_folder`.
+
+Usage: <br />
+```
+  h5_bag2tiles.py
+```
+
+#### OMTscoring Inference
+
+The final stage is to infer using the MLP on the tiles (and their features) generated in the previosu steps. Ensure to change the  `checkpoint_path`, `data_file`, `data_path` and `output` arguments within the file to ensure they are pointing towards the correct directories/files.
 
 Usage: <br />
 ```
   run_infer.py
 ```
+
+#### OMTscore Heatmaps
+
+We can also generate heatmaps for these images. This step needs some additional work from me.
+
+Usage: <br />
+```
+  create_heatmaps.py
+```
+

@@ -28,22 +28,23 @@ from utils.metrics import compute_aggregated_predictions, compute_aggregated_pro
 batch_size = 256          
 workers = 6                             # number of data loading workers
 aggregation_method = "avgtop"           # method for aggregating predictions
-cutoff = 0.5                            # cutoff for aggregation method used (found through training)
+cutoff = 0.0594686280738292             # cutoff for aggregation method used (found through training)
 method = "mlp"                          # model being used, for paper use MLP, but alternatives are FC and ResNet34
 features = "morph_features_104_64ftrs"  # input features. Could also be deep features e.g. resnet
 outcome = "transformation"              # prediction outcome
+k = 5                                   # top/bottom patches to keep
 
 # Checkpoint file of model to load
-checkpoint_path = ""
+checkpoint_path = "/data/ANTICIPATE/outcome_prediction/MIL/idars/output/train-sheffield_test-belfast,birmingham,brazil/transformation/mlp/morph_features_104_64ftrs_50eps_corrected_belfast_train_thr/oed/repeat_2/best0/checkpoint_best_AUC.pth"
 
 # CSV file containing fold information and targets per slide
-data_file = ""
+data_file = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/inference_data.csv"
   
 # Location of features. Stored as indiviudal .tar files containing each tile's features
-data_path = ""
+data_path = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/features/0.5-mpp_512_256_epith-0.5/nuclear/tiles_pt_files/"
 
 # Output folder
-output = ""
+output = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/OMTscoring/"
 
 # cnn inference 
 def inference(loader, model):
@@ -70,7 +71,7 @@ dataset = pd.read_csv(data_file)
     
 torch.cuda.empty_cache()
 
-test_data = dataset[dataset['test']==1][['slide_name', outcome, 'cohort', 'vendor']]
+test_data = dataset[dataset['test']==1][['slide_name', outcome, 'cohort']]
 test_data = test_data.rename(columns={"slide_name": "wsi", outcome: "label"})     
 
 if "raw_images" in features: # e.g raw images to train CNN
@@ -87,15 +88,12 @@ if "raw_images" in features: # e.g raw images to train CNN
     raw_images = True
     
 else: # e.g. MLP/FC
-    if features == 'morph_features_156ftrs':
-        nr_ftrs = 156
-        nr_hidden = 64
-    elif features == 'deep_features':
+    if features == 'deep_features':
         nr_ftrs = 1024
         nr_hidden = 512
     elif features == 'morph_features_104_64ftrs':
         nr_ftrs = 168
-        nr_hidden = 64 #128
+        nr_hidden = 64
     trans_Valid = None
     raw_images = False
 
@@ -109,7 +107,7 @@ cudnn.benchmark = True
 
 #loading data
 # train set
-test_dset = featuresdataset_inference(data_path=data_path, data_frame=test_data, transform=trans_Valid, raw_images=True)
+test_dset = featuresdataset_inference(data_path=data_path, data_frame=test_data, transform=trans_Valid, raw_images=raw_images)
 
 test_loader = torch.utils.data.DataLoader(
     test_dset,
@@ -122,7 +120,7 @@ ch = torch.load(checkpoint_path)
 model.load_state_dict(ch['state_dict'])
 
 #inference
-test_probs, test_preds = inference(test_loader, model, cutoff)
+test_probs, test_preds = inference(test_loader, model)
 test_probs_1 = test_probs[:, 1]
 top_prob_test = np.nanmax(test_probs, axis=1)
 
@@ -164,7 +162,7 @@ f1 = f1_score(y_true, y_pred)
 precision, recall, _ = precision_recall_curve(y_true, test_pred)
 average_precision = average_precision_score(y_true, test_pred)
 data_out = pd.DataFrame({'case':slides, 'y_true': y_true, 'y_pred': y_pred, 'cohort': cohorts})
-out_name = os.path.join(input, 'predictions.csv')
+out_name = os.path.join(output, 'predictions.csv')
 data_out.to_csv(out_name, index=False)
 
 m_data = pd.DataFrame({'case':slides, 'y_true': y_true, 'y_pred': y_pred, 'cohort': cohorts})

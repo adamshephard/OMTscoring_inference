@@ -2,7 +2,7 @@
 import os
 import numpy as np
 import pandas as pd
-from sklearn.metrics import auc, roc_curve, f1_score, precision_recall_curve, average_precision_score, RocCurveDisplay, plot_roc_curve, PrecisionRecallDisplay
+from sklearn.metrics import auc, roc_curve, f1_score, precision_recall_curve, average_precision_score
 from scipy.stats.mstats import gmean
 
 
