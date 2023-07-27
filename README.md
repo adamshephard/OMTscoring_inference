@@ -46,8 +46,7 @@ The first stage is to run HoVer-Net+ on the WSIs to generate epithelial and nucl
 
 Usage: <br />
 ```
-  run_segmentation.py
-
+  python run_segmentation.py
 ```
 
 #### Feature Generation
@@ -56,14 +55,14 @@ The second stage is to tesselate the image into smaller patches and generate cor
 
 Usage: <br />
 ```
-  get_features.py
+  python get_features.py
 ```
 
 We then need to adjust the patch output to be in the right format (one file per tile). We can this using the following script. Make sure to change the following arguments: `input_folder` and `output_folder`.
 
 Usage: <br />
 ```
-  h5_bag2tiles.py
+  python h5_bag2tiles.py
 ```
 
 #### OMTscoring Inference
@@ -72,7 +71,7 @@ The final stage is to infer using the MLP on the tiles (and their features) gene
 
 Usage: <br />
 ```
-  run_infer.py
+  python run_infer.py
 ```
 
 #### OMTscore Heatmaps
@@ -81,6 +80,6 @@ We can also generate heatmaps for these images. This step needs some additional 
 
 Usage: <br />
 ```
-  create_heatmaps.py
+  python create_heatmaps.py
 ```
 
