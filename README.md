@@ -24,7 +24,11 @@ Below are the main directories in the repository:
 
 Below are the main executable scripts in the repository:
 
-- `run_infer.py`: main inference script for tile and WSI processing
+- `run_segmentation.py`: hovernetplus inference script
+- `get_features.py`: script to generate features for the final MLP model (using output from above script)
+- `h5_bag2tiles.py`: script to get features into the correct format
+- `run_infer.py`: main inference script for OMTscoring
+- `create_heatmaps.py`: script to generate heatmaps (need tidying up)
 
 ## Inference
 
