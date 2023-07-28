@@ -13,19 +13,9 @@ except RuntimeError:
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
-import joblib
-import cv2
 import torch
-import torch.nn as nn
 
-
-from tiatoolbox.wsicore.wsireader import WSIReader, VirtualWSIReader, WSIMeta
-from tiatoolbox.utils.misc import imread, imwrite
-from tiatoolbox.tools import patchextraction
-
-from models.resnet_custom import resnet50_baseline
-from utils.utils import save_hdf5, colour2gray, white2binary
-from utils.features.nuclear import get_nuc_features
+from utils.utils import save_hdf5
 from utils.patch_generation import create_feature_patches
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')

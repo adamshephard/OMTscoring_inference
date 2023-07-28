@@ -4,11 +4,9 @@ of cross-validation. E.g. For internal testing.
 Inference is based on the IDaRS inference pipeline.
 """
 import os
-import glob
 multi_gpu = True
 if multi_gpu==False:
     os.environ["CUDA_VISIBLE_DEVICES"] = "2"
-import shutil
 import numpy as np
 import pandas as pd
 import torch

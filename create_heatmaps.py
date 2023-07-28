@@ -15,7 +15,7 @@ import torchvision.transforms as transforms
 import torchvision.models as models
 from dataloader.mil_reader import featuresdataset_wsi_inference
 
-from tiatoolbox.utils.misc import imread, imwrite
+from tiatoolbox.utils.misc import imwrite
 
 from models.net_desc import MLP, FC
 from utils.utils import get_heatmap, build_heatmap

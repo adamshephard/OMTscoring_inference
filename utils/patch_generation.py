@@ -1,12 +1,10 @@
 import os
-import glob
 from torch.multiprocessing import Pool, RLock, set_start_method
 try:
      set_start_method('spawn')
 except RuntimeError:
     pass
 
-import json
 import cv2
 import torch
 import torch.nn as nn
