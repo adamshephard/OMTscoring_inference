@@ -1,6 +1,3 @@
-import torch
-import numpy as np
-from PIL import Image
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import torch.nn as nn
