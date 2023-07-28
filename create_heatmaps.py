@@ -1,3 +1,6 @@
+"""
+Create heatmaps for OMTscoring model across the WSI.
+"""
 import os
 import glob
 
