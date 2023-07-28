@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 
 import numpy as np
-import scipy
 from typing import Union, Mapping, Callable
 
 class ABCFeatures(ABC):

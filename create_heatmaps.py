@@ -1,8 +1,5 @@
 import os
 import glob
-# multi_gpu = True
-# if multi_gpu==False:
-#     os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 from tqdm import tqdm
 import numpy as np
@@ -171,11 +168,6 @@ if __name__ == "__main__":
         model.fc = nn.Linear(num_ftrs, 2)
         
     model.cuda()
-    # Distribute across 2 gpus
-    # if multi_gpu == True:
-    #     model = nn.DataParallel(model, device_ids=[0, 1])
-    #     print('Running on multi GPU...')
-
     cudnn.benchmark = True
     for wsi_path in wsi_file_list:
         process(
