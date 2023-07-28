@@ -27,7 +27,7 @@ Below are the main executable scripts in the repository:
 - `run_segmentation.py`: hovernetplus inference script
 - `create_features.py`: script to generate features for the final MLP model (using output from above script)
 - `h5_bag2tiles.py`: script to get features into the correct format
-- `run_infer.py`: main inference script for OMTscoring
+- `run_omt_scoring.py`: main inference script for OMTscoring
 - `create_heatmaps.py`: script to generate heatmaps (need tidying up)
 
 ## Inference
@@ -75,7 +75,7 @@ The final stage is to infer using the MLP on the tiles (and their features) gene
 
 Usage: <br />
 ```
-  python run_infer.py
+  python run_omt_scoring.py
 ```
 
 #### OMTscore Heatmaps
