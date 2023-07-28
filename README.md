@@ -2,7 +2,7 @@
 
 This repository provides the inference code for the models used for predicting slide-level malignancy transformation in OED. Link to preprint [here](https://arxiv.org/abs/2307.03757). <br />
 
-The first step in this pipeline is to use HoVer-Net+ (see original paper [here](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAtoolbox (see paper [here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HoVer-Net in the below scripts. Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. After this, we perform the OMTsocring using our pre-trained MLP model.
+The first step in this pipeline is to use HoVer-Net+ (see original paper [here](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAtoolbox (see paper [here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HoVer-Net in the below scripts. Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. After this, we perform the OMTscoring using our pre-trained MLP model.
 
 ## Set Up Environment
 
@@ -25,7 +25,7 @@ Below are the main directories in the repository:
 Below are the main executable scripts in the repository:
 
 - `run_segmentation.py`: hovernetplus inference script
-- `get_features.py`: script to generate features for the final MLP model (using output from above script)
+- `create_features.py`: script to generate features for the final MLP model (using output from above script)
 - `h5_bag2tiles.py`: script to get features into the correct format
 - `run_infer.py`: main inference script for OMTscoring
 - `create_heatmaps.py`: script to generate heatmaps (need tidying up)
@@ -59,7 +59,7 @@ The second stage is to tesselate the image into smaller patches and generate cor
 
 Usage: <br />
 ```
-  python get_features.py
+  python create_features.py
 ```
 
 We then need to adjust the patch output to be in the right format (one file per tile). We can this using the following script. Make sure to change the following arguments: `input_folder` and `output_folder`.
@@ -80,8 +80,8 @@ Usage: <br />
 
 #### OMTscore Heatmaps
 
-We can also generate heatmaps for these images. This step needs some additional work from me.
-
+We can also generate heatmaps for these images. Ensure to change the  `input_checkpoint_path`, `input_wsi_dir`, `hovernetplus_output_dir` and `heatmap_output_dir` arguments within the file to ensure they are pointing towards the correct directories/files. Also change the `stride` from 128 create smoother images. However, a decreased stride by 2X wll increase the processing time by 2X.
+    
 Usage: <br />
 ```
   python create_heatmaps.py

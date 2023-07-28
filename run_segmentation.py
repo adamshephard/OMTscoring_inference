@@ -9,7 +9,7 @@ from tiatoolbox.models.engine.multi_task_segmentor import MultiTaskSegmentor
 input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
 output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output2/"
 
-wsi_file_list = glob.glob(input_wsi_dir + "*")[1:]
+wsi_file_list = glob.glob(input_wsi_dir + "*")
 
 multi_segmentor = MultiTaskSegmentor(
     pretrained_model="hovernetplus-oed",
@@ -36,7 +36,7 @@ nuclei_dir = os.path.join(output_dir, "hovernetplus", "nuclei")
 os.makedirs(layer_dir, exist_ok=True)
 os.makedirs(nuclei_dir, exist_ok=True)
 
-for out in enumerate(wsi_output):
+for out in wsi_output:
     basename = os.path.basename(out[0]).split(".")[0]
     outname = os.path.basename(out[1]).split(".")[0]
     shutil.move(
@@ -47,6 +47,8 @@ for out in enumerate(wsi_output):
         os.path.join(output_dir, "hovernetplus/tmp", f"{outname}.0.dat"),
         os.path.join(nuclei_dir, basename + ".dat"),
         )
+    shutil.rmtree(os.path.join(output_dir, "hovernetplus/tmp"))
+
 
 
 

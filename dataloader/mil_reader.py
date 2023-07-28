@@ -69,3 +69,27 @@ class featuresdataset_inference(data.Dataset):
 
     def __len__(self):
         return len(self.tiles)
+
+class featuresdataset_wsi_inference(data.Dataset):
+    def __init__(self, patches, rois, layer_col_dict, raw_images=False, transform=None):
+        # opens data dictionary (lib)
+        self.color_dict = layer_col_dict
+        self.patches = patches
+        self.rois = rois
+        self.transform = transform
+        self.raw_images = raw_images
+
+    def __getitem__(self,index):
+        tile = self.patches[index]
+        coords = torch.from_numpy(self.rois[index])
+        if self.raw_images is True:
+            img = Image.fromarray(tile)
+            img = img.resize((256,256),Image.BILINEAR)  
+            if self.transform is not None:
+                img = self.transform(img)
+        else:
+            img = torch.from_numpy(tile)
+        return [img, coords]
+
+    def __len__(self):
+        return len(self.patches)
