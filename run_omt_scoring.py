@@ -1,7 +1,5 @@
 """
-Inference scripts for OMTscoring. This generates average results over multiple repeats
-of cross-validation. E.g. For internal testing.
-Inference is based on the IDaRS inference pipeline.
+Inference script for OMTscoring.
 """
 import os
 multi_gpu = True
