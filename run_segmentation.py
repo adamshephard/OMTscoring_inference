@@ -6,8 +6,9 @@ import glob
 import shutil
 from tiatoolbox.models.engine.multi_task_segmentor import MultiTaskSegmentor
 
-input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
-output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output2/"
+input_wsi_dir = "/data/data/ANTICIPATE/NDB-UFES/processed/oed_vs_normal/" #"/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
+output_dir = "/data/data/ANTICIPATE/NDB-UFES/hovernetplus/inference/oed_vs_normal/" #"/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output2/"
+mode = "tile" # or wsi
 
 wsi_file_list = glob.glob(input_wsi_dir + "*")
 
@@ -24,7 +25,7 @@ wsi_output = multi_segmentor.predict(
     imgs=wsi_file_list,
     masks=None,
     save_dir=os.path.join(output_dir, "hovernetplus/tmp"),
-    mode="wsi",
+    mode=mode, #"wsi",
     on_gpu=True,
     crash_on_exception=True,
 )
@@ -47,7 +48,7 @@ for out in wsi_output:
         os.path.join(output_dir, "hovernetplus/tmp", f"{outname}.0.dat"),
         os.path.join(nuclei_dir, basename + ".dat"),
         )
-    shutil.rmtree(os.path.join(output_dir, "hovernetplus/tmp"))
+shutil.rmtree(os.path.join(output_dir, "hovernetplus/tmp"))
 
 
 

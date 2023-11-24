@@ -12,6 +12,7 @@ We use Python 3.10 with the [tiatoolbox](https://github.com/TissueImageAnalytics
 conda create -n tiatoolbox python=3.10
 conda activate tiatoolbox
 pip install tiatoolbox
+pip install h5py
 ```
 
 ## Repository Structure
@@ -38,9 +39,7 @@ Input: <br />
 
 ### Model Weights
 
-Model weights obtained from training ....
-
-If any of the above checkpoints are used, please ensure to cite the corresponding paper.
+The MLP model weights obtained from training on the Sheffield OED dataset: [OED MLP checkpoint](https://drive.google.com/file/d/1Q_fEFmTT5ZdF1TwCh1hH-pfVk2sb0pzU/view?usp=sharing). If the model/checkpoint is used, please ensure to cite the corresponding paper.
 
 ### Usage
 
