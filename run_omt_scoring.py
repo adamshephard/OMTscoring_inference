@@ -14,10 +14,6 @@ Options:
   --input_ftrs_dir=<string>   Path to folder containing features. Stored as indiviudal .tar files containing each tile's features
   --output_dir=<string>       Path to output directory to save results.
   --model_checkpoint=<string> Path to model checkpoint.
-  --mode=<string>             Tile-level or WSI-level mode. [default: wsi]
-  --nr_loader_workers=<n>     Number of workers during data loading. [default: 10]
-  --nr_post_proc_workers=<n>  Number of workers during post-processing. [default: 10]
-  --batch_size=<n>            Batch size. [default: 8]
 
 Use `run_omt_scoring.py --help` to show their options and usage
 """

@@ -66,7 +66,7 @@ We then need to adjust the patch output to be in the right format (one file per 
 
 Usage: <br />
 ```
-  python h5_bag2tiles.py --input_dir="/path/to/input/bag/features/" --output_dir="/path/to/output/dir/"
+  python h5_bag2tiles.py --input_dir="/path/to/input/bag/features/" --output_dir="/path/to/output/tile/features/"
 ```
 
 #### OMTscoring Inference
@@ -75,7 +75,7 @@ The final stage is to infer using the MLP on the tiles (and their features) gene
 
 Usage: <br />
 ```
-  python run_omt_scoring.py --input_dir="/path/to/input/bag/features/" --input_data_file="/path/to/input/data/file/" --input_ftrs_dir="/path/to/input/ftrs/" --model_checkpoint="/path/to/model/checkpoint/" --output_dir="/path/to/output/dir/"
+  python run_omt_scoring.py --input_data_file="/path/to/input/data/file/" --input_ftrs_dir="/path/to/input/tile/ftrs/" --model_checkpoint="/path/to/model/checkpoint/" --output_dir="/path/to/output/dir/"
 ```
 
 #### OMTscore Heatmaps
