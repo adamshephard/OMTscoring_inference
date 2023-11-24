@@ -13,6 +13,7 @@ conda create -n tiatoolbox python=3.10
 conda activate tiatoolbox
 pip install tiatoolbox
 pip install h5py
+pip install docopt
 ```
 
 ## Repository Structure
@@ -45,44 +46,44 @@ The MLP model weights obtained from training on the Sheffield OED dataset: [OED 
 
 #### Segmentation with HoVer-Net+
 
-The first stage is to run HoVer-Net+ on the WSIs to generate epithelial and nuclei segmentations. This can be quite slow as run at 0.5mpp. Ensure to change the  `input_wsi_dir` and `output_dir` arguments within the file to ensure they are pointing towards the correct directories.
+The first stage is to run HoVer-Net+ on the WSIs to generate epithelial and nuclei segmentations. This can be quite slow as run at 0.5mpp.
 
 Usage: <br />
 ```
-  python run_segmentation.py
+  python run_segmentation.py --input_dir="/path/to/input/slides/or/images/dir/" --output_dir="/path/to/output/dir/"
 ```
 
 #### Feature Generation
 
-The second stage is to tesselate the image into smaller patches and generate correpsonding patch-level morphological and spatial features using the nuclei/layer segmentations. Ensure to change the  `input_wsi_dir`, `hovernetplus_output_dir`, and `feature_output_dir` arguments within the file to ensure they are pointing towards the correct directories. Note the `hovernetplus_output_dir` is the output directory from the previous step.
+The second stage is to tesselate the image into smaller patches and generate correpsonding patch-level morphological and spatial features using the nuclei/layer segmentations. Note the `hovernetplus_dir` is the output directory from the previous step.
 
 Usage: <br />
 ```
-  python create_features.py
+  python create_features.py --input_dir="/path/to/input/slides/or/images/dir/" --hovernetplus_dir="/path/to/hovernetplus/output/" --output_dir="/path/to/output/feature/dir/"
 ```
 
-We then need to adjust the patch output to be in the right format (one file per tile). We can this using the following script. Make sure to change the following arguments: `input_folder` and `output_folder`.
+We then need to adjust the patch output to be in the right format (one file per tile). We can this using the following script. Here, the input directory is the bag-level nuclear features created by the previous line, e.g. `features/0.5-mpp_512_256_epith-0.5/nuclear/h5_files/`.
 
 Usage: <br />
 ```
-  python h5_bag2tiles.py
+  python h5_bag2tiles.py --input_dir="/path/to/input/bag/features/" --output_dir="/path/to/output/dir/"
 ```
 
 #### OMTscoring Inference
 
-The final stage is to infer using the MLP on the tiles (and their features) generated in the previosu steps. Ensure to change the  `checkpoint_path`, `data_file`, `data_path` and `output` arguments within the file to ensure they are pointing towards the correct directories/files.
+The final stage is to infer using the MLP on the tiles (and their features) generated in the previous steps. Here, the `input_ftrs_dir` is the directroy containnig the features created in the previous steps. The `model_checkpoint` path is tot he weights provided above, and the `input_data_file` is the path to the data file describing the slides to process. An example file is provided in `data_file_template.csv`.
 
 Usage: <br />
 ```
-  python run_omt_scoring.py
+  python run_omt_scoring.py --input_dir="/path/to/input/bag/features/" --input_data_file="/path/to/input/data/file/" --input_ftrs_dir="/path/to/input/ftrs/" --model_checkpoint="/path/to/model/checkpoint/" --output_dir="/path/to/output/dir/"
 ```
 
 #### OMTscore Heatmaps
 
-We can also generate heatmaps for these images. Ensure to change the  `input_checkpoint_path`, `input_wsi_dir`, `hovernetplus_output_dir` and `heatmap_output_dir` arguments within the file to ensure they are pointing towards the correct directories/files. Also change the `stride` from 128 create smoother images. However, a decreased stride by 2X wll increase the processing time by 2X.
+We can also generate heatmaps for these images. Change the `stride` within the file from 128 to create smoother images. However, a decreased stride by 2X will increase the processing time by 2X.
     
 Usage: <br />
 ```
-  python create_heatmaps.py
+  python create_heatmaps.py --input_dir="/path/to/input/slides/or/images/dir/" --hovernetplus_dir="/path/to/hovernetplus/output/" --checkpoint_path="/path/to/checkpoint/" --output_dir="/path/to/heatmap/output/dir/"
 ```
 

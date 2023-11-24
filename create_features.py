@@ -1,7 +1,23 @@
 """
 Generate morphological/spatial features for MLP (based on HoVer-Net+ output) for OMTscoring.
+
+Usage:
+  create_features.py [options] [--help] [<args>...]
+  create_features.py --version
+  create_features.py (-h | --help)
+  
+Options:
+  -h --help                   Show this string.
+  --version                   Show version.
+
+  --input_dir=<string>        Path to input directory containing slides or images.
+  --hovernetplus_dir=<string> Path to HoVer-Net+ output directory.
+  --output_dir=<string>       Path to output directory to save features.
+
+Use `create_features.py --help` to show their options and usage
 """
 
+from docopt import docopt
 import os
 import glob
 from torch.multiprocessing import Pool, RLock, set_start_method
@@ -105,11 +121,26 @@ def process(
 
 
 if __name__ == "__main__":
+    args = docopt(__doc__, help=False, options_first=True)
+
+    if args['--help']:
+        print(__doc__)
+        exit()
+
+    if args['--input_dir']:
+        input_wsi_dir = args['--input_dir']
+    else:      
+        input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
     
-    ### Input/Output Files ###
-    input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
-    hovernetplus_output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/hovernetplus/"
-    feature_output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/features/"
+    if args['--hovernetplus_dir']:
+        hovernetplus_dir = args['--hovernetplus_dir']
+    else:
+        hovernetplus_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/hovernetplus/"
+        
+    if args['--output_dir']:
+        output_dir = args['--output_dir']
+    else:
+        output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/features/"
     
     ### Input/Output Parameters ###
     num_processes = 1
@@ -148,8 +179,8 @@ if __name__ == "__main__":
             args=(
                 feature_type,
                 n,
-                hovernetplus_output_dir,
-                feature_output_dir,
+                hovernetplus_dir,
+                output_dir,
                 colour_dict,
                 patch_size,
                 stride,

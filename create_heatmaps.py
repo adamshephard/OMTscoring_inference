@@ -1,6 +1,25 @@
 """
 Create heatmaps for OMTscoring model across the WSI.
+
+Usage:
+  create_heatmaps.py [options] [--help] [<args>...]
+  create_heatmaps.py --version
+  create_heatmaps.py (-h | --help)
+  
+Options:
+  -h --help                   Show this string.
+  --version                   Show version.
+
+  --input_dir=<string>        Path to input directory containing slides or images.
+  --hovernetplus_dir=<string> Path to hovernetplus directory.
+  --checkpoint_path=<string>  Path to MLP checkpoint.
+  --output_dir=<string>       Path to output directory to save results.
+  --batch_size=<n>            Batch size. [default: 256]
+
+Use `create_heatmaps.py --help` to show their options and usage
 """
+
+from docopt import docopt
 import os
 import glob
 
@@ -124,13 +143,35 @@ def process(
     return
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    args = docopt(__doc__, help=False, options_first=True)
+
+    if args['--help']:
+        print(__doc__)
+        exit()
+
+    if args['--input_dir']:
+        input_wsi_dir = args['--input_dir']
+    else:      
+        input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
+
+    if args['--hovernetplus_dir']:
+        hovernetplus_dir = args['--hovernetplus_dir']
+    else:
+        hovernetplus_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/hovernetplus/"#  
     
-    ### Input/Output Files ###
-    input_wsi_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/wsis/"
-    hovernetplus_output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/hovernetplus/"#
-    input_checkpoint_path = "/data/ANTICIPATE/outcome_prediction/MIL/idars/output/train-sheffield_test-belfast,birmingham,brazil/transformation/mlp/morph_features_104_64ftrs_50eps_corrected_belfast_train_thr/oed/repeat_2/best0/checkpoint_best_AUC.pth"
-    heatmap_output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/heatmaps/"
+    if args['--checkpoint_path']:
+        input_checkpoint_path = args['--checkpoint_path']
+    else:
+        input_checkpoint_path = "/data/ANTICIPATE/outcome_prediction/MIL/idars/output/train-sheffield_test-belfast,birmingham,brazil/transformation/mlp/morph_features_104_64ftrs_50eps_corrected_belfast_train_thr/oed/repeat_2/best0/checkpoint_best_AUC.pth"
+    
+    if args['--output_dir']:
+        heatmap_output_dir = args['--output_dir']
+    else:
+        heatmap_output_dir = "/data/ANTICIPATE/outcome_prediction/MIL/github_testdata/output/heatmaps/"
+    
+    if args['--batch_size']:
+        batch_size = int(args['--batch_size'])
     
     ### Input/Output Parameters ###
     method = "mlp" # alternatives are "resnet34", "resnet34_SA", "resnet34_DA", "resnet34_SA_DA"
@@ -148,7 +189,6 @@ if __name__ == "__main__":
     output_res = 2 # desired resolution of output heatmaps
     layer_res = 0.5 # resolution of layer segmentation from HoVer-Net+ in MPP
     epith_thresh = 0.5 # threshold for ratio of epithelium required to be in a patch to use patch
-    batch_size = 256
     
     ### Main ###
     wsi_file_list = glob.glob(input_wsi_dir + "*")
@@ -178,7 +218,7 @@ if __name__ == "__main__":
                 features,
                 wsi_path,
                 input_checkpoint_path,
-                hovernetplus_output_dir,
+                hovernetplus_dir,
                 heatmap_output_dir,
                 colour_dict,
                 patch_size,
