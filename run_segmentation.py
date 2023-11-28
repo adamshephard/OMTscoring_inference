@@ -50,8 +50,8 @@ if __name__ == '__main__':
         if mode not in ["tile", "wsi"]:
             raise ValueError("Mode must be tile or wsi")
     else:
-        mode = "tile" # or wsi
-        
+        mode = "wsi" # or tile
+
     wsi_file_list = glob.glob(input_wsi_dir + "*")
 
     multi_segmentor = MultiTaskSegmentor(

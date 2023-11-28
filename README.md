@@ -40,7 +40,7 @@ Input: <br />
 
 ### Model Weights
 
-The MLP model weights obtained from training on the Sheffield OED dataset: [OED MLP checkpoint](https://drive.google.com/file/d/1Q_fEFmTT5ZdF1TwCh1hH-pfVk2sb0pzU/view?usp=sharing). If the model/checkpoint is used, please ensure to cite the corresponding paper.
+The MLP model weights obtained from training on the Sheffield OED dataset: [OED MLP checkpoint](https://drive.google.com/file/d/1yYWO1EAbXgv7eW98c7CxXydW9SdUtMQW/view?usp=sharing). If the model/checkpoint is used, please ensure to cite the corresponding paper.
 
 ### Usage
 

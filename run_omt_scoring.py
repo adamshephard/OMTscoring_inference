@@ -202,8 +202,8 @@ if __name__ == '__main__':
     ### Inputs Files and Paramaters ###
     batch_size = 256          
     workers = 6                             # number of data loading workers
-    aggregation_method = "avgtop"           # method for aggregating predictions
-    cutoff = 0.0594686280738292             # cutoff for aggregation method used (found through training)
+    aggregation_method = "avg prob"         # method for aggregating predictions
+    cutoff = 0.0379912272659                # cutoff for aggregation method used (found through training)
     method = "mlp"                          # model being used, for paper use MLP, but alternatives are FC and ResNet34
     features = "morph_features_104_64ftrs"  # input features. Could also be deep features e.g. resnet
     outcome = "transformation"              # prediction outcome
