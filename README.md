@@ -1,8 +1,8 @@
 # OMTscoring: A Fully Automated and Explainable Algorithm for the Prediction of Malignant Transformation in Oral Epithelial Dysplasia
 
-This repository provides the inference code for the models used for predicting slide-level malignancy transformation in OED. Link to preprint [here](https://arxiv.org/abs/2307.03757). <br />
+This repository provides the inference code for the models used for predicting slide-level malignancy transformation in OED. Link to npj Precision Oncology paper [here](https://www.nature.com/articles/s41698-024-00624-8). <br />
 
-The first step in this pipeline is to use HoVer-Net+ (see original paper [here](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAtoolbox (see paper [here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HoVer-Net in the below scripts. Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. After this, we perform the OMTscoring using our pre-trained MLP model.
+The first step in this pipeline is to use HoVer-Net+ (see original paper [here](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Shephard_Simultaneous_Nuclear_Instance_and_Layer_Segmentation_in_Oral_Epithelial_Dysplasia_ICCVW_2021_paper.html)) to segment the epithelium and nuclei. We have used the TIAToolbox (see paper [here](https://www.nature.com/articles/s43856-022-00186-5)) implementation of HoVer-Net+ in the below scripts. Next, we generate patch-level morphological and spatial features to use in our OMTscoring pipeline. After this, we perform the OMTscoring using our pre-trained MLP model.
 
 ## Set Up Environment
 
@@ -36,7 +36,7 @@ Below are the main executable scripts in the repository:
 
 ### Data Format
 Input: <br />
-- WSIs supported by [OpenSlide](https://openslide.org/), including `svs`, `tif`, `ndpi` and `mrxs`.
+- WSIs supported by [TIAToolbox](https://tia-toolbox.readthedocs.io/en/latest/?badge=latest), including `svs`, `tif`, `ndpi` and `mrxs`.
 
 ### Model Weights
 
