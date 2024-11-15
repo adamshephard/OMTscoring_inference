@@ -87,3 +87,25 @@ Usage: <br />
   python create_heatmaps.py --input_dir="/path/to/input/slides/or/images/dir/" --hovernetplus_dir="/path/to/hovernetplus/output/" --checkpoint_path="/path/to/checkpoint/" --output_dir="/path/to/heatmap/output/dir/"
 ```
 
+
+## License
+
+The source code as hosted on GitHub is released under the BSD-3-Clause license. The full text of the licence is included in [LICENSE](https://github.com/adamshephard/OMTscoring_inference/blob/main/LICENSE) file for further details.
+
+Model weights are licensed under [Attribution-NonCommercial-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/). Please consider the implications of using the weights under this license. 
+
+## Cite this repository
+
+If you find ODYN useful or use it in your research, please cite our paper:
+
+```
+@article{shephard2024,
+  title={A fully automated and explainable algorithm for predicting malignant transformation in oral epithelial dysplasia},
+  author={Shephard, Adam J and Bashir, Raja Muhammad Saad and Mahmood, Hanya and Jahanifar, Mostafa and Minhas, Fayyaz and Raza, Shan E Ahmed and McCombe, Kris D and Craig, Stephanie G and James, Jacqueline and Brooks, Jill and others},
+  journal={npj Precision Oncology},
+  volume={8},
+  number={1},
+  pages={137},
+  year={2024},
+  publisher={Nature Publishing Group UK London}
+}
